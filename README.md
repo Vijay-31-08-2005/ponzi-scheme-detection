@@ -48,6 +48,8 @@ nltk.download('vader_lexicon')
 
 ## Usage
 
+The model is already trained, check [Running](https://github.com/Vijay-31-08-2005/ponzi-scheme-detection/tree/main?tab=readme-ov-file#running)
+
 ### 1. Train the Return Risk Neural Network
 
 ```bash
