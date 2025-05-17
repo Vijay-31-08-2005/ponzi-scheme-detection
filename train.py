@@ -205,25 +205,27 @@ def train_decision_tree(folder_path):
     joblib.dump(best_clf, "ponzi_scheme_classifier.pkl")
     print("Optimized decision tree model saved.")
 
-# Function to infer from a single scheme text file
-def infer_scheme(file_path):
+def infer_scheme(file_path, api=False):
+    risk_model = load_model("tf_return_risk_model.keras")
+    scaler = joblib.load("tf_return_risk_scaler.pkl")
+
     params = parse_scheme_text(file_path)
-    risk_score = calculate_return_risk(params)
+    risk_score = float(calculate_return_risk(params))
     clf = joblib.load("ponzi_scheme_classifier.pkl")
-    
+
     features = np.array([[
-        params["promised_return_percent"],
-        params["return_frequency_days"],
-        params["time_to_roi_days"],
-        params["minimum_deposit_usd"],
-        params["referral_pressure"],
-        params["whitepaper_available"],
-        params["team_members"],
-        params["sentiment_score"],
-        params["scam_keyword_density"],
-        params["crypto_only"]
+        float(params["promised_return_percent"]),
+        float(params["return_frequency_days"]),
+        float(params["time_to_roi_days"]),
+        float(params["minimum_deposit_usd"]),
+        float(params["referral_pressure"]),
+        float(params["whitepaper_available"]),
+        float(params["team_members"]),
+        float(params["sentiment_score"]),
+        float(params["scam_keyword_density"]),
+        float(params["crypto_only"])
     ]])
-    
+
     # Get prediction and probabilities
     prediction = clf.predict(features)
     probabilities = clf.predict_proba(features)
@@ -239,9 +241,9 @@ def infer_scheme(file_path):
     # Check the size of probabilities and assign values accordingly
     if probabilities.shape[1] > 1:
         result["probabilities"] = {
-            "Not Ponzi": probabilities[0][0],
-            "Likely Ponzi": probabilities[0][1],
-            "Ponzi": probabilities[0][2]
+            "Not Ponzi": float(probabilities[0][0]),
+            "Likely Ponzi": float(probabilities[0][1]),
+            "Ponzi": float(probabilities[0][2])
         }
     else:
         result["probabilities"] = {
@@ -250,25 +252,30 @@ def infer_scheme(file_path):
             "Ponzi": 0.0
         }
 
-    # Print all parameters and scores
-    print("Parameters:")
-    for key, value in params.items():
-        print(f"{key}: {value}")
-    
-    print("\nRisk Score:", risk_score)
-    print("\nClassification:", prediction[0])
-    print("\nProbabilities:")
-    for class_name, prob in result["probabilities"].items():
-        print(f"{class_name}: {prob:.4f}")
+    # If `api=True`, include all extracted parameters in the return
+    if api:
+        result.update(params)
+
+    # Print all parameters and scores (if not API mode)
+    if not api:
+        print("\n\n\n\n\nParameters:")
+        for key, value in params.items():
+            print(f"{key}: {value}")
+
+        print("\nRisk Score:", risk_score)
+        print("\nClassification:", prediction[0])
+        print("\nProbabilities:")
+        for class_name, prob in result["probabilities"].items():
+            print(f"{class_name}: {prob:.4f}")
 
     return result
+
 
 if __name__ == "__main__":
     import sys
     if len(sys.argv) > 1:
         scheme_file = sys.argv[1]
         result = infer_scheme(scheme_file)
-        print(result)
     else:
         folder_path = "data"  # Folder containing all .txt files
         train_decision_tree(folder_path)
