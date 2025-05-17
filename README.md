@@ -72,6 +72,31 @@ Processes all `.txt` files in `data/`, computes risk scores, trains the classifi
 
 ## Running
 
+
+### Start the Web Application
+
+```bash
+python run.py
+```
+Then open http://127.0.0.1:5000/ in your browser.
+
+### How to Use
+
+1. **Enter a scheme description** in the text box.
+2. **Click "Analyze Scheme"** to run the AI.
+3. **The results will be displayed below.**
+4. **Click "Show More"** to see full details.
+
+### Web App Demo
+
+<p align="left">
+  <img src="https://res.cloudinary.com/duff0nokr/image/upload/v1747500171/ponziwebappdemo_srxwly.gif" alt="Web App Demo" width="600"/>
+</p>
+
+_This GIF demonstrates how to enter a scheme, analyze it, and view the full breakdown._
+
+---
+
 ### Run Inference on a Single Scheme
 
 ```bash
