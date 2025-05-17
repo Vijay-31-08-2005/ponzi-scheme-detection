@@ -19,7 +19,7 @@ This program processes text descriptions of investment schemes to determine if t
 ## Dependencies
 
 - **Python** 3.10 or higher  
-- **Libraries**: pandas, numpy, scikit-learn, tensorflow, torch, joblib, nltk, spacy, transformers, sentence-transformers  
+- **Libraries**: flask, pandas, numpy, scikit-learn, tensorflow, torch, joblib, nltk, spacy, transformers, sentence-transformers,
 
 <br>
 
